@@ -58,7 +58,6 @@ void display_cities() {
     printf("\n");
 }
 
-
 void set_distance() {
     if (city_count < 2) {
         printf("Need at least 2 cities to set distance!\n");
@@ -88,13 +87,11 @@ void set_distance() {
     printf("Enter distance (km): ");
     scanf("%d", &dist);
 
-
     distances[from][to] = dist;
     distances[to][from] = dist;
 
     printf("Distance set successfully!\n");
 }
-
 
 void display_distances() {
     if (city_count == 0) {
@@ -102,7 +99,7 @@ void display_distances() {
         return;
     }
 
-    printf("\n.... Distance Table ....\n");
+    printf("\n--- Distance Table ---\n");
     printf("%-15s", "Cities");
     for (int i = 0; i < city_count; i++) {
         printf("%-10s", cities[i]);
@@ -121,6 +118,8 @@ void display_distances() {
         printf("\n");
     }
 }
+
+
 void display_vehicles() {
     printf("\n=== Available Vehicles ===\n");
     printf("%-5s %-10s %-12s %-12s %-12s %-15s\n",
@@ -134,6 +133,8 @@ void display_vehicles() {
     }
     printf("\n");
 }
+
+
 void calculate_delivery_cost() {
     if (city_count < 2) {
         printf("Need at least 2 cities for delivery calculation!\n");
@@ -212,6 +213,33 @@ void calculate_delivery_cost() {
     printf("Estimated Time: %.2f hours\n", delivery_time);
     printf("======================================================\n");
 }
+
+void delivery_menu() {
+    int choice;
+
+    while (1) {
+        printf("\n=== Delivery Management ===\n");
+        printf("1. View Vehicles\n");
+        printf("2. Calculate Delivery Cost\n");
+        printf("3. Back to Main Menu\n");
+        printf("Choose option: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                display_vehicles();
+                break;
+            case 2:
+                calculate_delivery_cost();
+                break;
+            case 3:
+                return;
+            default:
+                printf("Invalid choice!\n");
+        }
+    }
+}
+
 void distance_menu() {
     int choice;
 
@@ -242,7 +270,7 @@ void city_menu() {
     int choice;
 
     while (1) {
-        printf("\n... City Management ...\n");
+        printf("\n=== City Management ===\n");
         printf("1. Add City\n");
         printf("2. Display Cities\n");
         printf("3. Back to Main Menu\n");
@@ -266,15 +294,17 @@ void city_menu() {
 
 int main() {
     int choice;
-display_vehicles();
-calculate_delivery_cost();
+
+    init_distances();
+
     printf("Welcome to Logistics Management System\n");
 
     while (1) {
-        printf("\n... MAIN MENU ...\n");
+        printf("\n=== MAIN MENU ===\n");
         printf("1. City Management\n");
         printf("2. Distance Management\n");
-        printf("2. Exit\n");
+        printf("3. Delivery Management\n");
+        printf("4. Exit\n");
         printf("Enter choice: ");
         scanf("%d", &choice);
 
@@ -284,8 +314,12 @@ calculate_delivery_cost();
                 break;
             case 2:
                 distance_menu();
+                break;
             case 3:
-                printf("you exit!\n");
+                delivery_menu();
+                break;
+            case 4:
+                printf("Goodbye!\n");
                 exit(0);
             default:
                 printf("Invalid choice!\n");
