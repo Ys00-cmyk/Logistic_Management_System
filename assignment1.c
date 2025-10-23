@@ -8,7 +8,20 @@
 
 char cities[MAX_CITIES][MAX_NAME_LEN];
 int city_count = 0;
+int distances[MAX_CITIES][MAX_CITIES];
 
+
+void init_distances() {
+    for (int i = 0; i < MAX_CITIES; i++) {
+        for (int j = 0; j < MAX_CITIES; j++) {
+            if (i == j) {
+                distances[i][j] = 0;
+            } else {
+                distances[i][j] = -1;
+            }
+        }
+    }
+}
 
 void add_city() {
     if (city_count >= MAX_CITIES) {
@@ -28,6 +41,96 @@ void display_cities() {
         printf("%d. %s\n", i + 1, cities[i]);
     }
     printf("\n");
+}
+
+
+void set_distance() {
+    if (city_count < 2) {
+        printf("Need at least 2 cities to set distance!\n");
+        return;
+    }
+
+    display_cities();
+
+    int from, to, dist;
+    printf("Enter source city number: ");
+    scanf("%d", &from);
+    printf("Enter destination city number: ");
+    scanf("%d", &to);
+
+    from--; to--;
+
+    if (from < 0 || from >= city_count || to < 0 || to >= city_count) {
+        printf("Invalid city numbers!\n");
+        return;
+    }
+
+    if (from == to) {
+        printf("Source and destination cannot be same!\n");
+        return;
+    }
+
+    printf("Enter distance (km): ");
+    scanf("%d", &dist);
+
+
+    distances[from][to] = dist;
+    distances[to][from] = dist;
+
+    printf("Distance set successfully!\n");
+}
+
+
+void display_distances() {
+    if (city_count == 0) {
+        printf("No cities available!\n");
+        return;
+    }
+
+    printf("\n.... Distance Table ....\n");
+    printf("%-15s", "Cities");
+    for (int i = 0; i < city_count; i++) {
+        printf("%-10s", cities[i]);
+    }
+    printf("\n");
+
+    for (int i = 0; i < city_count; i++) {
+        printf("%-15s", cities[i]);
+        for (int j = 0; j < city_count; j++) {
+            if (distances[i][j] == -1) {
+                printf("%-10s", "N/A");
+            } else {
+                printf("%-10d", distances[i][j]);
+            }
+        }
+        printf("\n");
+    }
+}
+
+void distance_menu() {
+    int choice;
+
+    while (1) {
+        printf("\n=== Distance Management ===\n");
+        printf("1. Set Distance\n");
+        printf("2. Display Distance Table\n");
+        printf("3. Back to Main Menu\n");
+        printf("Choose option: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                set_distance();
+                break;
+            case 2:
+                display_distances();
+                break;
+            case 3:
+                return;
+            default:
+                printf("Invalid choice!\n");
+        }
+    }
 }
 
 void city_menu() {
@@ -64,6 +167,7 @@ int main() {
     while (1) {
         printf("\n... MAIN MENU ...\n");
         printf("1. City Management\n");
+        printf("2. Distance Management\n");
         printf("2. Exit\n");
         printf("Enter choice: ");
         scanf("%d", &choice);
@@ -73,6 +177,8 @@ int main() {
                 city_menu();
                 break;
             case 2:
+                distance_menu();
+            case 3:
                 printf("you exit!\n");
                 exit(0);
             default:
