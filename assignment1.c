@@ -11,6 +11,21 @@ int city_count = 0;
 int distances[MAX_CITIES][MAX_CITIES];
 
 
+struct Vehicle {
+    char name[20];
+    int capacity;
+    int rate_per_km;
+    int avg_speed;
+    int fuel_efficiency;
+};
+
+
+struct Vehicle vehicles[3] = {
+    {"Van", 1000, 30, 60, 12},
+    {"Truck", 5000, 40, 50, 6},
+    {"Lorry", 10000, 80, 45, 4}
+};
+
 void init_distances() {
     for (int i = 0; i < MAX_CITIES; i++) {
         for (int j = 0; j < MAX_CITIES; j++) {
@@ -106,7 +121,19 @@ void display_distances() {
         printf("\n");
     }
 }
+void display_vehicles() {
+    printf("\n=== Available Vehicles ===\n");
+    printf("%-5s %-10s %-12s %-12s %-12s %-15s\n",
+           "No.", "Type", "Capacity(kg)", "Rate/km(LKR)", "Speed(km/h)", "Efficiency(km/l)");
+    printf("--------------------------------------------------------------------\n");
 
+    for (int i = 0; i < 3; i++) {
+        printf("%-5d %-10s %-12d %-12d %-12d %-15d\n",
+               i + 1, vehicles[i].name, vehicles[i].capacity,
+               vehicles[i].rate_per_km, vehicles[i].avg_speed, vehicles[i].fuel_efficiency);
+    }
+    printf("\n");
+}
 void distance_menu() {
     int choice;
 
@@ -161,7 +188,7 @@ void city_menu() {
 
 int main() {
     int choice;
-
+display_vehicles();
     printf("Welcome to Logistics Management System\n");
 
     while (1) {
