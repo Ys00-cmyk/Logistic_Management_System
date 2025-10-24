@@ -255,7 +255,23 @@ void process_delivery() {
     printf("Delivery record saved successfully!\n");
 }
 
+printf("\n=== Delivery History ===\n");
+    printf("%-5s %-15s %-15s %-10s %-10s %-12s %-12s\n",
+           "No.", "From", "To", "Vehicle", "Weight(kg)", "Distance(km)", "Charge(LKR)");
+    printf("--------------------------------------------------------------------------------\n");
 
+    for (int i = 0; i < delivery_count; i++) {
+        printf("%-5d %-15s %-15s %-10s %-10d %-12d %-12.2f\n",
+               i + 1,
+               cities[deliveries[i].from_city],
+               cities[deliveries[i].to_city],
+               vehicles[deliveries[i].vehicle_type].name,
+               deliveries[i].weight,
+               deliveries[i].distance,
+               deliveries[i].customer_charge);
+    }
+    printf("\n");
+}
 void delivery_menu() {
     int choice;
 
@@ -275,6 +291,9 @@ void delivery_menu() {
                 calculate_delivery_cost();
                 break;
             case 3:
+                view_delivery_history();
+                break;
+            case 4:
                 return;
             default:
                 printf("Invalid choice!\n");
