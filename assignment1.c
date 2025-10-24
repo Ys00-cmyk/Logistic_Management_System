@@ -272,6 +272,16 @@ printf("\n=== Delivery History ===\n");
     }
     printf("\n");
 }
+void generate_reports() {
+    int total_distance = 0;
+    float total_revenue = 0.0;
+    float total_profit = 0.0;
+    float total_time = 0.0;
+    int shortest_distance = deliveries[0].distance;
+    int longest_distance = deliveries[0].distance;
+    int shortest_index = 0;
+    int longest_index = 0;
+}
 void delivery_menu() {
     int choice;
 
