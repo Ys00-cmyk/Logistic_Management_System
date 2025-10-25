@@ -40,6 +40,7 @@ struct Vehicle vehicles[3] = {
     {"Lorry", 10000, 80, 45, 4}
 };
 
+
 void init_distances() {
     for (int i = 0; i < MAX_CITIES; i++) {
         for (int j = 0; j < MAX_CITIES; j++) {
@@ -394,7 +395,90 @@ void generate_reports() {
            longest_distance);
     printf("===============================================\n");
 }
+void remove_city() {
+    if (city_count == 0) {
+        printf("No cities available to remove!\n");
+        return;
+    }
 
+    display_cities();
+
+    int city_num;
+    printf("Enter city number to remove (1-%d): ", city_count);
+    scanf("%d", &city_num);
+
+    if (city_num < 1 || city_num > city_count) {
+        printf("Invalid city number!\n");
+        return;
+    }
+
+    int index_to_remove = city_num - 1;
+    char city_name[MAX_NAME_LEN];
+    strcpy(city_name, cities[index_to_remove]);
+
+    for (int i = index_to_remove; i < city_count - 1; i++) {
+        strcpy(cities[i], cities[i + 1]);
+    }
+
+
+    for (int i = index_to_remove; i < city_count - 1; i++) {
+        for (int j = 0; j < city_count; j++) {
+            distances[i][j] = distances[i + 1][j];
+        }
+    }
+
+    for (int j = index_to_remove; j < city_count - 1; j++) {
+        for (int i = 0; i < city_count; i++) {
+            distances[i][j] = distances[i][j + 1];
+        }
+    }
+
+    city_count--;
+    printf("City '%s' removed successfully!\n", city_name);
+
+
+    for (int i = 0; i < delivery_count; i++) {
+        if (deliveries[i].from_city == index_to_remove || deliveries[i].to_city == index_to_remove) {
+            printf(" Delivery record %d referenced removed city!\n", i + 1);
+        }
+
+        if (deliveries[i].from_city > index_to_remove) {
+            deliveries[i].from_city--;
+        }
+        if (deliveries[i].to_city > index_to_remove) {
+            deliveries[i].to_city--;
+        }
+    }
+
+    save_cities_and_distances();
+}
+
+void rename_city() {
+    if (city_count == 0) {
+        printf(" No cities available to rename!\n");
+        return;
+    }
+
+    display_cities();
+
+    int city_num;
+    printf("Enter city number to rename (1-%d): ", city_count);
+    scanf("%d", &city_num);
+
+    if (city_num < 1 || city_num > city_count) {
+        printf(" Invalid city number!\n");
+        return;
+    }
+
+    char old_name[MAX_NAME_LEN];
+    strcpy(old_name, cities[city_num - 1]);
+
+    printf("Enter new name for %s: ", old_name);
+    scanf("%s", cities[city_num - 1]);
+
+    printf("City renamed from '%s' to '%s' successfully!\n", old_name, cities[city_num - 1]);
+    save_cities_and_distances();
+}
 void reports_menu() {
     int choice;
 
@@ -480,7 +564,9 @@ void city_menu() {
         printf("\n=== City Management ===\n");
         printf("1. Add City\n");
         printf("2. Display Cities\n");
-        printf("3. Back to Main Menu\n");
+        printf("3. Rename City\n");
+        printf("4. Remove City \n");
+        printf("5. Back to Main Menu\n");
         printf("Choose option: ");
         scanf("%d", &choice);
 
@@ -492,6 +578,10 @@ void city_menu() {
                 display_cities();
                 break;
             case 3:
+                rename_city();
+            case 4:
+                remove_city();
+            case 5:
                 return;
             default:
                 printf("Invalid choice!\n");
