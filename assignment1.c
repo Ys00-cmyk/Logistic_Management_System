@@ -4,7 +4,7 @@
 
 #define MAX_CITIES 30
 #define MAX_NAME_LEN 50
-
+#define MAX_DELIVERIES 50
 
 char cities[MAX_CITIES][MAX_NAME_LEN];
 int city_count = 0;
@@ -253,63 +253,32 @@ void process_delivery_with_optimization() {
         printf("Weight exceeds vehicle capacity!\n");
         return;
     }
-    display_cities();
-void process_delivery() {
-    if (city_count < 2) {
-        printf("Need at least 2 cities for delivery calculation!\n");
+
+
+    int path[MAX_CITIES];
+    int shortest_distance = find_shortest_path(from, to, path);
+
+    if (shortest_distance == -1) {
+        printf("No route available between these cities!\n");
         return;
     }
 
-    if (delivery_count >= MAX_DELIVERIES) {
-        printf("Maximum delivery limit reached!\n");
-        return;
+    int direct_distance = distances[from][to];
+
+    printf("\n--- Route Analysis ---\n");
+    if (direct_distance != -1) {
+        printf("Direct distance: %d km\n", direct_distance);
+    } else {
+        printf("No direct route available\n");
     }
+    printf("Optimized distance: %d km\n", shortest_distance);
 
-    display_cities();
-
-    int from, to, weight, vehicle_type;
-    printf("Enter source city number: ");
-    scanf("%d", &from);
-    printf("Enter destination city number: ");
-    scanf("%d", &to);
-
-    from--; to--;
-
-    if (from < 0 || from >= city_count || to < 0 || to >= city_count) {
-        printf("Invalid city numbers!\n");
-        return;
-    }
-
-    if (from == to) {
-        printf("Source and destination cannot be same!\n");
-        return;
-    }
-
-    if (distances[from][to] == -1) {
-        printf("Distance not set between these cities!\n");
-        return;
-    }
-
-    printf("Enter weight (kg): ");
-    scanf("%d", &weight);
-
-    display_vehicles();
-    printf("Select vehicle type (1-3): ");
-    scanf("%d", &vehicle_type);
-    vehicle_type--;
-
-    if (vehicle_type < 0 || vehicle_type > 2) {
-        printf("Invalid vehicle type!\n");
-        return;
-    }
-
-    if (weight > vehicles[vehicle_type].capacity) {
-        printf("Weight exceeds vehicle capacity!\n");
-        return;
+    if (direct_distance != -1 && shortest_distance < direct_distance) {
+        printf("Optimized route saves: %d km\n", direct_distance - shortest_distance);
     }
 
 
-    int distance = distances[from][to];
+    int distance = shortest_distance;
     float base_cost = distance * vehicles[vehicle_type].rate_per_km * (1 + (float)weight / 10000);
     float delivery_time = (float)distance / vehicles[vehicle_type].avg_speed;
     float fuel_used = (float)distance / vehicles[vehicle_type].fuel_efficiency;
@@ -331,13 +300,12 @@ void process_delivery() {
 
     delivery_count++;
 
-
     printf("\n======================================================\n");
-    printf("DELIVERY COST ESTIMATION\n");
+    printf("DELIVERY COST ESTIMATION (OPTIMIZED ROUTE)\n");
     printf("------------------------------------------------------\n");
     printf("From: %s\n", cities[from]);
     printf("To: %s\n", cities[to]);
-    printf("Distance: %d km\n", distance);
+    printf("Minimum Distance: %d km\n", distance);
     printf("Vehicle: %s\n", vehicles[vehicle_type].name);
     printf("Weight: %d kg\n", weight);
     printf("------------------------------------------------------\n");
@@ -353,7 +321,13 @@ void process_delivery() {
     printf("Delivery record saved successfully!\n");
 }
 
-printf("\n=== Delivery History ===\n");
+void view_delivery_history() {
+    if (delivery_count == 0) {
+        printf("No deliveries recorded yet!\n");
+        return;
+    }
+
+    printf("\n=== Delivery History ===\n");
     printf("%-5s %-15s %-15s %-10s %-10s %-12s %-12s\n",
            "No.", "From", "To", "Vehicle", "Weight(kg)", "Distance(km)", "Charge(LKR)");
     printf("--------------------------------------------------------------------------------\n");
