@@ -273,6 +273,56 @@ printf("\n=== Delivery History ===\n");
     printf("\n");
 }
 void generate_reports() {
+    if (delivery_count == 0) {
+        printf("No deliveries recorded yet! Cannot generate reports.\n");
+        return;
+    }
+    int total_distance = 0;
+    float total_revenue = 0.0;
+    float total_profit = 0.0;
+    float total_time = 0.0;
+    int shortest_distance = deliveries[0].distance;
+    int longest_distance = deliveries[0].distance;
+    int shortest_index = 0;
+    int longest_index = 0;
+
+    for (int i = 0; i < delivery_count; i++) {
+        total_distance += deliveries[i].distance;
+        total_revenue += deliveries[i].customer_charge;
+        total_profit += (deliveries[i].cost * 0.25);
+        total_time += deliveries[i].time;
+
+        if (deliveries[i].distance < shortest_distance) {
+            shortest_distance = deliveries[i].distance;
+            shortest_index = i;
+        }
+        if (deliveries[i].distance > longest_distance) {
+            longest_distance = deliveries[i].distance;
+            longest_index = i;
+        }
+    }
+    float avg_delivery_time = total_time / delivery_count;
+
+    printf("\n===============================================\n");
+    printf("PERFORMANCE REPORTS\n");
+    printf("===============================================\n");
+    printf("Total Deliveries Completed: %d\n", delivery_count);
+    printf("Total Distance Covered: %d km\n", total_distance);
+    printf("Average Delivery Time: %.2f hours\n", avg_delivery_time);
+    printf("Total Revenue: %.2f LKR\n", total_revenue);
+    printf("Total Profit: %.2f LKR\n", total_profit);
+    printf("-----------------------------------------------\n");
+    printf("Shortest Route: %s -> %s (%d km)\n",
+           cities[deliveries[shortest_index].from_city],
+           cities[deliveries[shortest_index].to_city],
+           shortest_distance);
+    printf("Longest Route: %s -> %s (%d km)\n",
+           cities[deliveries[longest_index].from_city],
+           cities[deliveries[longest_index].to_city],
+           longest_distance);
+    printf("===============================================\n");
+}
+void generate_reports() {
     int total_distance = 0;
     float total_revenue = 0.0;
     float total_profit = 0.0;
