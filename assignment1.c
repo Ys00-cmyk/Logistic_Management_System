@@ -322,16 +322,29 @@ void generate_reports() {
            longest_distance);
     printf("===============================================\n");
 }
-void generate_reports() {
-    int total_distance = 0;
-    float total_revenue = 0.0;
-    float total_profit = 0.0;
-    float total_time = 0.0;
-    int shortest_distance = deliveries[0].distance;
-    int longest_distance = deliveries[0].distance;
-    int shortest_index = 0;
-    int longest_index = 0;
+
+void reports_menu() {
+    int choice;
+
+    while (1) {
+        printf("\n=== Reports ===\n");
+        printf("1. Generate Performance Report\n");
+        printf("2. Back to Main Menu\n");
+        printf("Choose option: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                generate_reports();
+                break;
+            case 2:
+                return;
+            default:
+                printf("Invalid choice!\n");
+        }
+    }
 }
+
 void delivery_menu() {
     int choice;
 
@@ -425,7 +438,8 @@ int main() {
         printf("1. City Management\n");
         printf("2. Distance Management\n");
         printf("3. Delivery Management\n");
-        printf("4. Exit\n");
+        printf("4. Reports\n");
+        printf("5. Exit\n");
         printf("Enter choice: ");
         scanf("%d", &choice);
 
@@ -440,6 +454,9 @@ int main() {
                 delivery_menu();
                 break;
             case 4:
+                reports_menu();
+                break;
+            case 5:
                 printf("Goodbye!\n");
                 exit(0);
             default:
