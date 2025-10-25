@@ -149,6 +149,58 @@ void display_vehicles() {
 }
 
 
+int find_shortest_path(int from, int to, int path[]) {
+    if (from == to) return 0;
+
+
+    int dist[MAX_CITIES][MAX_CITIES];
+    int next[MAX_CITIES][MAX_CITIES];
+
+
+    for (int i = 0; i < city_count; i++) {
+        for (int j = 0; j < city_count; j++) {
+            if (i == j) {
+                dist[i][j] = 0;
+                next[i][j] = -1;
+            } else if (distances[i][j] != -1) {
+                dist[i][j] = distances[i][j];
+                next[i][j] = j;
+            } else {
+                dist[i][j] = INF;
+                next[i][j] = -1;
+            }
+        }
+    }
+
+
+    for (int k = 0; k < city_count; k++) {
+        for (int i = 0; i < city_count; i++) {
+            for (int j = 0; j < city_count; j++) {
+                if (dist[i][k] != INF && dist[k][j] != INF &&
+                    dist[i][k] + dist[k][j] < dist[i][j]) {
+                    dist[i][j] = dist[i][k] + dist[k][j];
+                    next[i][j] = next[i][k];
+                }
+            }
+        }
+    }
+
+    if (dist[from][to] == INF) {
+        return -1;
+    }
+
+    int current = from;
+    int path_length = 0;
+    path[path_length++] = current;
+
+    while (current != to) {
+        current = next[current][to];
+        if (current == -1) break;
+        path[path_length++] = current;
+    }
+
+    return dist[from][to];
+}
 void calculate_delivery_cost() {
     if (city_count < 2) {
         printf("Need at least 2 cities for delivery calculation!\n");
