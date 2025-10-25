@@ -198,7 +198,6 @@ int find_shortest_path(int from, int to, int path[]) {
         if (current == -1) break;
         path[path_length++] = current;
     }
-
     return dist[from][to];
 }
 void calculate_delivery_cost() {
@@ -206,7 +205,54 @@ void calculate_delivery_cost() {
         printf("Need at least 2 cities for delivery calculation!\n");
         return;
     }
+void process_delivery_with_optimization() {
+    if (city_count < 2) {
+        printf("Need at least 2 cities for delivery calculation!\n");
+        return;
+    }
 
+    if (delivery_count >= MAX_DELIVERIES) {
+        printf("Maximum delivery limit reached!\n");
+        return;
+    }
+
+    display_cities();
+
+    int from, to, weight, vehicle_type;
+    printf("Enter source city number: ");
+    scanf("%d", &from);
+    printf("Enter destination city number: ");
+    scanf("%d", &to);
+
+    from--; to--;
+
+    if (from < 0 || from >= city_count || to < 0 || to >= city_count) {
+        printf("Invalid city numbers!\n");
+        return;
+    }
+
+    if (from == to) {
+        printf("Source and destination cannot be same!\n");
+        return;
+    }
+
+    printf("Enter weight (kg): ");
+    scanf("%d", &weight);
+
+    display_vehicles();
+    printf("Select vehicle type (1-3): ");
+    scanf("%d", &vehicle_type);
+    vehicle_type--;
+
+    if (vehicle_type < 0 || vehicle_type > 2) {
+        printf("Invalid vehicle type!\n");
+        return;
+    }
+
+    if (weight > vehicles[vehicle_type].capacity) {
+        printf("Weight exceeds vehicle capacity!\n");
+        return;
+    }
     display_cities();
 void process_delivery() {
     if (city_count < 2) {
