@@ -424,7 +424,8 @@ void delivery_menu() {
         printf("\n=== Delivery Management ===\n");
         printf("1. View Vehicles\n");
         printf("2. Calculate Delivery Cost\n");
-        printf("3. Back to Main Menu\n");
+        printf("3. View Delivery History\n");
+        printf("4. Back to Main Menu\n");
         printf("Choose option: ");
         scanf("%d", &choice);
 
@@ -433,7 +434,7 @@ void delivery_menu() {
                 display_vehicles();
                 break;
             case 2:
-                calculate_delivery_cost();
+                process_delivery_with_optimization();
                 break;
             case 3:
                 view_delivery_history();
@@ -504,7 +505,7 @@ int main() {
     init_distances();
 
     printf("Welcome to Logistics Management System\n");
-
+    printf("Now with route optimization!\n");
     while (1) {
         printf("\n=== MAIN MENU ===\n");
         printf("1. City Management\n");
