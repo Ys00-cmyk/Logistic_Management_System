@@ -90,6 +90,30 @@ void load_cities_and_distances() {
     fclose(file);
     printf("Previous routes data loaded successfully!\n");
 }
+void save_deliveries() {
+    FILE *file = fopen("deliveries.txt", "w");
+    if (file == NULL) {
+        printf("Error saving delivery data!\n");
+        return;
+    }
+
+    fprintf(file, "%d\n", delivery_count);
+
+    for (int i = 0; i < delivery_count; i++) {
+        fprintf(file, "%d %d %d %d %d %.2f %.2f %.2f %.2f\n",
+                deliveries[i].from_city,
+                deliveries[i].to_city,
+                deliveries[i].weight,
+                deliveries[i].vehicle_type,
+                deliveries[i].distance,
+                deliveries[i].cost,
+                deliveries[i].time,
+                deliveries[i].fuel_cost,
+                deliveries[i].customer_charge);
+    }
+
+    fclose(file);
+}
 void init_distances() {
     for (int i = 0; i < MAX_CITIES; i++) {
         for (int j = 0; j < MAX_CITIES; j++) {
