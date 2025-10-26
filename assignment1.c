@@ -114,6 +114,31 @@ void save_deliveries() {
 
     fclose(file);
 }
+
+void save_deliveries() {
+    FILE *file = fopen("deliveries.txt", "w");
+    if (file == NULL) {
+        printf("Error saving delivery data!\n");
+        return;
+    }
+
+    fprintf(file, "%d\n", delivery_count);
+
+    for (int i = 0; i < delivery_count; i++) {
+        fprintf(file, "%d %d %d %d %d %.2f %.2f %.2f %.2f\n",
+                deliveries[i].from_city,
+                deliveries[i].to_city,
+                deliveries[i].weight,
+                deliveries[i].vehicle_type,
+                deliveries[i].distance,
+                deliveries[i].cost,
+                deliveries[i].time,
+                deliveries[i].fuel_cost,
+                deliveries[i].customer_charge);
+    }
+
+    fclose(file);
+}
 void init_distances() {
     for (int i = 0; i < MAX_CITIES; i++) {
         for (int j = 0; j < MAX_CITIES; j++) {
@@ -136,6 +161,8 @@ void add_city() {
     scanf("%s", cities[city_count]);
     city_count++;
     printf("City added successfully!\n");
+
+     save_cities_and_distances();
 }
 
 void display_cities() {
@@ -179,6 +206,8 @@ void set_distance() {
     distances[to][from] = dist;
 
     printf("Distance set successfully!\n");
+
+     save_cities_and_distances();
 }
 
 void display_distances() {
@@ -393,6 +422,7 @@ void process_delivery_with_optimization() {
     printf("======================================================\n");
 
     printf("Delivery record saved successfully!\n");
+    save_deliveries();
 }
 
 void view_delivery_history() {
@@ -667,6 +697,8 @@ int main() {
 
     init_distances();
 
+ load_cities_and_distances();
+    load_deliveries();
     printf("Welcome to Logistics Management System\n");
     printf("Now with route optimization!\n");
     while (1) {
@@ -693,8 +725,12 @@ int main() {
                 reports_menu();
                 break;
             case 5:
+                save_cities_and_distances();
+                save_deliveries();
+                printf("All data saved successfully!\n");
                 printf("Goodbye!\n");
                 exit(0);
+
             default:
                 printf("Invalid choice!\n");
         }
