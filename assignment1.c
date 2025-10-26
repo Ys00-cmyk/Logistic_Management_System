@@ -66,6 +66,30 @@ void save_cities_and_distances() {
     fclose(file);
 }
 
+void load_cities_and_distances() {
+    FILE *file = fopen("routes.txt", "r");
+    if (file == NULL) {
+        printf("No previous routes data found. Starting fresh.\n");
+        return;
+    }
+
+    fscanf(file, "%d", &city_count);
+
+
+    for (int i = 0; i < city_count; i++) {
+        fscanf(file, "%s", cities[i]);
+    }
+
+
+    for (int i = 0; i < city_count; i++) {
+        for (int j = 0; j < city_count; j++) {
+            fscanf(file, "%d", &distances[i][j]);
+        }
+    }
+
+    fclose(file);
+    printf("Previous routes data loaded successfully!\n");
+}
 void init_distances() {
     for (int i = 0; i < MAX_CITIES; i++) {
         for (int j = 0; j < MAX_CITIES; j++) {
