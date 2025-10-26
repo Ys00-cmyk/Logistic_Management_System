@@ -40,6 +40,31 @@ struct Vehicle vehicles[3] = {
     {"Lorry", 10000, 80, 45, 4}
 };
 
+void save_cities_and_distances() {
+    FILE *file = fopen("routes.txt", "w");
+    if (file == NULL) {
+        printf("Error saving routes data!\n");
+        return;
+    }
+
+
+    fprintf(file, "%d\n", city_count);
+
+
+    for (int i = 0; i < city_count; i++) {
+        fprintf(file, "%s\n", cities[i]);
+    }
+
+
+    for (int i = 0; i < city_count; i++) {
+        for (int j = 0; j < city_count; j++) {
+            fprintf(file, "%d ", distances[i][j]);
+        }
+        fprintf(file, "\n");
+    }
+
+    fclose(file);
+}
 
 void init_distances() {
     for (int i = 0; i < MAX_CITIES; i++) {
